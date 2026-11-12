@@ -17,7 +17,7 @@ templates = Jinja2Templates(directory="templates")
 white_urls = ['/', '/login', '/register', '/profile']
 DATA_FILE = Path("users.json")
 
-def load_data() -> list:
+def load_user() -> list:
     """Читает JSON. Если файла нет — возвращает пустой список."""
     if not DATA_FILE.exists():
         return []
@@ -27,7 +27,7 @@ def load_data() -> list:
         return []
 
 
-def save_data(data: list) -> None:
+def save_user(data: list) -> None:
     """Записывает список в JSON."""
     DATA_FILE.write_text(
         json.dumps(data, ensure_ascii=False, indent=4),
@@ -43,24 +43,41 @@ def register_page(request: Request):
     return templates.TemplateResponse(request=request, name = 'register.html')
 
 @app.post('/register', response_class=HTMLResponse)
-def reg_user(
+def register(
     request: Request, 
     username: str = Form(...), 
     name: str = Form(...), 
     password: str = Form(...), 
     password2: str = Form(...), 
 ):
-    users = load_data()
+    username = username.strip()
+    error = None
+
+    if not username or not name or not password or not password2:
+        error = 'Заполните все поля обозначенные *'
+    elif password != password2:
+        error = 'Введите одинаковые пароли'
+
+    if error:
+        return templates.TemplateResponse(
+            request=request,
+            name='register.html',
+            context= {'error': error},
+            status_code=400
+        )
+    
+    users = load_user()
     users.append({
         "username": username,
         "name": name,
         "password": password 
     })
-    save_data(users)
+    save_user(users)
 
     return templates.TemplateResponse(
-        'index.html',
-        {'reauest': request, 'result': username}
+        request=request,
+        name='register.html',
+        context={'result': username}
     )
 
 
