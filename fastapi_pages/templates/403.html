@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}403 — доступ запрещён{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="error-code text-warning">403</div>
+    <h1 class="h3 mt-3">Доступ запрещён</h1>
+    <p class="text-muted col-md-6 mx-auto">
+        {{ detail }}
+    </p>
+    <p class="text-muted small">
+        Подсказка: содержимое /admin видит только пользователь с логином <b>admin</b>.
+    </p>
+    <a href="/" class="btn btn-primary">На главную</a>
+    {% if not user %}
+    <a href="/login" class="btn btn-outline-primary">Войти</a>
+    {% endif %}
+</div>
+{% endblock %}

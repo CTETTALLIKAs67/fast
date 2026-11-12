@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Секретная страница — FastAPI Демо{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card border-success shadow-sm">
+            <div class="card-body">
+                <h1 class="h3 text-success">🔐 Секретная страница</h1>
+                <p>
+                    Привет, {{ user.name }}! Вам открыта страница /admin,
+                    потому что вы вошли под логином <b>admin</b>.
+                </p>
+                <p class="text-muted mb-0">
+                    Все остальные вошедшие пользователи получают ошибку 403
+                    и страницу «Доступ запрещён».
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация — FastAPI Демо{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h3 mb-3">Регистрация</h1>
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                <form method="post" action="/register">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Логин *</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Имя (необязательно)</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль *</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2" class="form-label">Повторите пароль *</label>
+                        <input type="password" class="form-control" id="password2" name="password2" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                Уже есть аккаунт? <a href="/login">Войдите</a>
+            </div>
+        </div>
+        <div class="alert alert-warning small mt-3">
+            Демо-режим: пароль сохраняется в <code>users.json</code> в открытом виде
+            и при входе не проверяется.
+        </div>
+    </div>
+</div>
+{% endblock %}

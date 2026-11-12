@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — FastAPI Демо{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+    <h1 class="display-5 fw-bold">Добро пожаловать! 🎓</h1>
+    <p class="col-md-8 fs-5">
+        Это учебный сайт на FastAPI. Здесь есть вход, регистрация, домашняя страница
+        и кастомные страницы ошибок 404 и 403. Данные пользователей хранятся в JSON-файле.
+    </p>
+    {% if user %}
+        <p class="lead">Вы вошли как <b>{{ user.name }}</b> ({{ user.username }}).</p>
+        <a class="btn btn-primary btn-lg" href="/profile">Перейти на домашнюю страницу</a>
+    {% else %}
+        <a class="btn btn-primary btn-lg me-2" href="/register">Зарегистрироваться</a>
+        <a class="btn btn-outline-primary btn-lg" href="/login">Войти</a>
+    {% endif %}
+</div>
+
+<h2 class="h4 mb-3">Что посмотреть</h2>
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h3 class="h6">/register и /login</h3>
+                <p class="card-text mb-0 small">
+                    Регистрация записывает пользователя в <code>users.json</code>.
+                    Вход работает в демо-режиме: у зарегистрированного пользователя
+                    принимается любой пароль.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h3 class="h6">/profile — домашняя</h3>
+                <p class="card-text mb-0 small">
+                    Личная страница. Анонимных посетителей она перенаправляет
+                    на форму входа.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h3 class="h6">/admin — ошибка 403</h3>
+                <p class="card-text mb-0 small">
+                    Секретная страница: её видит только пользователь с логином
+                    <b>admin</b>, остальные получают страницу «Доступ запрещён».
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h3 class="h6">/api/me — JSON API</h3>
+                <p class="card-text mb-0 small">
+                    Возвращает текущего пользователя в JSON. А ещё откройте любой
+                    несуществующий адрес, например
+                    <a href="/no-such-page">/no-such-page</a> — увидите страницу 404.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
