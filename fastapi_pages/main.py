@@ -51,12 +51,15 @@ def register(
     password2: str = Form(...), 
 ):
     username = username.strip()
+    users = load_user()
     error = None
 
     if not username or not name or not password or not password2:
         error = 'Заполните все поля обозначенные *'
     elif password != password2:
         error = 'Введите одинаковые пароли'
+    elif any(u['username'] == username for u in users):
+        error = 'Введённый логин уже занят'
 
     if error:
         return templates.TemplateResponse(
@@ -66,7 +69,6 @@ def register(
             status_code=400
         )
     
-    users = load_user()
     users.append({
         "username": username,
         "name": name,
@@ -74,16 +76,12 @@ def register(
     })
     save_user(users)
 
-    return templates.TemplateResponse(
-        request=request,
-        name='register.html',
-        context={'result': username}
-    )
+    return RedirectResponse('/login', status_code=303)
 
 
 @app.get('/login', response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse(request=request, name = 'login.html')
+    return templates.TemplateResponse(request=request, name = 'login.html', context={'registered': True})
 
 # @app.get('/profile', response_class=HTMLResponse)
 # def login_page(request: Request):
