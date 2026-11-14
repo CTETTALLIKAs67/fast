@@ -1,4 +1,5 @@
 # python -m uvicorn very_first:app --reload
+# uvicorn main:app --reload --ssl-keyfile key.pem --ssl-certfile cert.pem
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -7,10 +8,14 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from pathlib import Path
 import json
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 import hashlib
 
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key="cookie")
+ph = PasswordHasher()
 
 templates = Jinja2Templates(directory="templates")
 
@@ -34,9 +39,10 @@ def save_user(data: list) -> None:
         encoding="utf-8"
     )
 
-@app.get("/", response_class=HTMLResponse) # перехват адреса http://localhost:8000/
+@app.get("/", response_class=HTMLResponse)
 def main_page(request: Request):
-    return templates.TemplateResponse(request=request, name = "index.html")
+    user = request.session.get("user")
+    return templates.TemplateResponse(request=request,context = {'user': user} ,name = "index.html")
 
 @app.get('/register', response_class=HTMLResponse)
 def register_page(request: Request):
@@ -68,24 +74,85 @@ def register(
             context= {'error': error},
             status_code=400
         )
+
+    hashed_password = ph.hash(password)
     
     users.append({
         "username": username,
         "name": name,
-        "password": password 
+        "password": hashed_password 
     })
     save_user(users)
 
-    return RedirectResponse('/login', status_code=303)
+    return RedirectResponse('/login?registered=1', status_code=303)
 
 
 @app.get('/login', response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse(request=request, name = 'login.html', context={'registered': True})
+    registered = request.query_params.get('registered') == '1'
+    return templates.TemplateResponse(
+        request=request,
+        name = 'login.html',
+        context = {'registered': registered},
+    )
 
-# @app.get('/profile', response_class=HTMLResponse)
-# def login_page(request: Request):
-#     return templates.TemplateResponse(request=request, name = 'profile.html')
+@app.post('/login', response_class=HTMLResponse)
+def login(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    username = username.strip()
+    error = None
+    if not username or not password:
+        error = 'Введите логин или пароль'
+    else:
+        user = None
+        for u in load_user():
+            if u['username'] == username:
+                user = u
+                break
+        try:
+            if user is None:
+                raise ValueError
+            ph.verify(user['password'], password)
+        except:
+            error = 'Неверный логин или пароль'
+        # if user is None or bcrypt.checkpw(password, user['password']) :#user['password'] != password:
+        #     error = 'Неверный логин или пароль'
+    
+    if error:
+        return templates.TemplateResponse(
+            request = request,
+            name = 'login.html',
+            context = {'error': error, 'username': username},
+            status_code = 400
+        )
+    
+    request.session['user'] = {'username': user['username'], 'name': user['name']}
+    return RedirectResponse('/profile', status_code = 303)
+
+@app.get('/profile', response_class=HTMLResponse)
+def login_page(request: Request):
+    user = request.session.get('user')
+    if user is None:
+        return templates.TemplateResponse(
+            request=request,
+            name = '403.html',
+            context = {},
+            status_code = 40
+        )
+    
+    return templates.TemplateResponse(
+        request = request,
+        name = 'profile.html',
+        context = {'user': user}
+    )
+
+@app.get('/logout')
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse('/', status_code=303)
 
 
 @app.exception_handler(404)

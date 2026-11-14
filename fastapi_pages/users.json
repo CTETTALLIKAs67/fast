@@ -5,8 +5,48 @@
         "password": "demo"
     },
     {
+        "username": "qwe",
+        "name": "qwe",
+        "password": "qwe"
+    },
+    {
+        "username": "qwe1",
+        "name": "qwe1",
+        "password": "qwe"
+    },
+    {
+        "username": "qwe12",
+        "name": "qwe12",
+        "password": "qwe"
+    },
+    {
+        "username": "678",
+        "name": "5678",
+        "password": "qwe"
+    },
+    {
+        "username": "6783",
+        "name": "56783",
+        "password": "йцу"
+    },
+    {
+        "username": "67834",
+        "name": "567834",
+        "password": "qwe"
+    },
+    {
+        "username": "567153",
+        "name": "56",
+        "password": "qwe"
+    },
+    {
         "username": "CTETTALLIKAs",
         "name": "CTETTALLIKAs",
-        "password": "Schkola2008!"
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$0IhnPgXSu/WWS2VLdtBoLg$SBpFIMa3LppO+7KElU6RJGJpZ+3UC8p0yP48EvA0p7A"
+    },
+    {
+        "username": "123",
+        "name": "1234",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$GD31VzGBdTeGZaahxmwIvg$v7C2vaa+aTIFeaXA/I2tfXOcw1HibokHFHKo/aEm7Bs"
     }
 ]
