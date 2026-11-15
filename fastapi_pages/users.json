@@ -42,6 +42,6 @@
     {
         "username": "CTETTALLIKAs",
         "name": "CTETTALLIKAs",
-        "password": "Schkola2008!"
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$mtTCDtqHA8/4YoOozx6seA$Xa5e8Lk+cUZ4gePcTLocVc9XzcMlWIUOK31DfhArCVo"
     }
 ]
