@@ -118,8 +118,6 @@ def login(
             ph.verify(user['password'], password)
         except:
             error = 'Неверный логин или пароль'
-        # if user is None or bcrypt.checkpw(password, user['password']) :#user['password'] != password:
-        #     error = 'Неверный логин или пароль'
     
     if error:
         return templates.TemplateResponse(
