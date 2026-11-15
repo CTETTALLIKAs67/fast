@@ -42,11 +42,6 @@
     {
         "username": "CTETTALLIKAs",
         "name": "CTETTALLIKAs",
-        "password": "$argon2id$v=19$m=65536,t=3,p=4$0IhnPgXSu/WWS2VLdtBoLg$SBpFIMa3LppO+7KElU6RJGJpZ+3UC8p0yP48EvA0p7A"
-    },
-    {
-        "username": "123",
-        "name": "1234",
-        "password": "$argon2id$v=19$m=65536,t=3,p=4$GD31VzGBdTeGZaahxmwIvg$v7C2vaa+aTIFeaXA/I2tfXOcw1HibokHFHKo/aEm7Bs"
+        "password": "Schkola2008!"
     }
 ]
