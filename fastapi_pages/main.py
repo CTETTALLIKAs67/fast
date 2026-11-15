@@ -131,7 +131,7 @@ def login(
     return RedirectResponse('/profile', status_code = 303)
 
 @app.get('/profile', response_class=HTMLResponse)
-def login_page(request: Request):
+def profile (request: Request):
     user = request.session.get('user')
     if user is None:
         return templates.TemplateResponse(
