@@ -14,6 +14,8 @@ from argon2.exceptions import VerifyMismatchError
 import hashlib
 
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key="cookie")
+ph = PasswordHasher()
 
 templates = Jinja2Templates(directory="templates")
 
@@ -87,11 +89,70 @@ def register(
 
 @app.get('/login', response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse(request=request, name = 'login.html', context={'registered': True})
+    registered = request.query_params.get('registered') == '1'
+    return templates.TemplateResponse(
+        request=request,
+        name = 'login.html',
+        context = {'registered': registered},
+    )
 
-# @app.get('/profile', response_class=HTMLResponse)
-# def login_page(request: Request):
-#     return templates.TemplateResponse(request=request, name = 'profile.html')
+@app.post('/login', response_class=HTMLResponse)
+def login(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    username = username.strip()
+    error = None
+    if not username or not password:
+        error = 'Введите логин или пароль'
+    else:
+        user = None
+        for u in load_user():
+            if u['username'] == username:
+                user = u
+                break
+        try:
+            if user is None:
+                raise ValueError
+            ph.verify(user['password'], password)
+        except:
+            error = 'Неверный логин или пароль'
+        # if user is None or bcrypt.checkpw(password, user['password']) :#user['password'] != password:
+        #     error = 'Неверный логин или пароль'
+    
+    if error:
+        return templates.TemplateResponse(
+            request = request,
+            name = 'login.html',
+            context = {'error': error, 'username': username},
+            status_code = 400
+        )
+    
+    request.session['user'] = {'username': user['username'], 'name': user['name']}
+    return RedirectResponse('/profile', status_code = 303)
+
+@app.get('/profile', response_class=HTMLResponse)
+def login_page(request: Request):
+    user = request.session.get('user')
+    if user is None:
+        return templates.TemplateResponse(
+            request=request,
+            name = '403.html',
+            context = {},
+            status_code = 40
+        )
+    
+    return templates.TemplateResponse(
+        request = request,
+        name = 'profile.html',
+        context = {'user': user}
+    )
+
+@app.get('/logout')
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse('/', status_code=303)
 
 
 @app.exception_handler(404)
