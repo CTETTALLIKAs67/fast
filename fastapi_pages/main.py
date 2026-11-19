@@ -1,7 +1,7 @@
 # python -m uvicorn very_first:app --reload
 # uvicorn main:app --reload --ssl-keyfile key.pem --ssl-certfile cert.pem
 
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -21,6 +21,14 @@ templates = Jinja2Templates(directory="templates")
 
 white_urls = ['/', '/login', '/register', '/profile']
 DATA_FILE = Path("users.json")
+
+def require_admin(request: Request):
+    if request.session.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Нужны права администратора")
+
+def require_moderator(request: Request):
+    if request.session.get("role") not in ("admin", "moderator"):
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
 
 def load_user() -> list:
     """Читает JSON. Если файла нет — возвращает пустой список."""
@@ -80,7 +88,8 @@ def register(
     users.append({
         "username": username,
         "name": name,
-        "password": hashed_password 
+        "password": hashed_password,
+        "role": "user" 
     })
     save_user(users)
 
@@ -128,6 +137,7 @@ def login(
         )
     
     request.session['user'] = {'username': user['username'], 'name': user['name']}
+    request.session["role"] = user.get("role", "user")
     return RedirectResponse('/profile', status_code = 303)
 
 @app.get('/profile', response_class=HTMLResponse)

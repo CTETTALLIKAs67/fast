@@ -1,47 +1,26 @@
 [
     {
-        "username": "demo",
-        "name": "Демо-пользователь",
-        "password": "demo"
+        "username": "admin",
+        "name": "admin",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$tw9JiiTy8VJ4A0AnL4IXWw$7S3U28BOL7d3O/l1P0xC0YzPKwFx5CP2E/OON7i8Ieg",
+        "role": "admin"
     },
     {
-        "username": "qwe",
-        "name": "qwe",
-        "password": "qwe"
-    },
-    {
-        "username": "qwe1",
-        "name": "qwe1",
-        "password": "qwe"
-    },
-    {
-        "username": "qwe12",
-        "name": "qwe12",
-        "password": "qwe"
-    },
-    {
-        "username": "678",
-        "name": "5678",
-        "password": "qwe"
-    },
-    {
-        "username": "6783",
-        "name": "56783",
-        "password": "йцу"
-    },
-    {
-        "username": "67834",
-        "name": "567834",
-        "password": "qwe"
-    },
-    {
-        "username": "567153",
-        "name": "56",
-        "password": "qwe"
+        "username": "moder",
+        "name": "moder",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$jDujAyIJA1dwFSN5rx7baw$3oYzMXAprWv4JNX+8vbRqrbT6+T3OSDRRZiT3v4TdpU",
+        "role": "moder"
     },
     {
         "username": "CTETTALLIKAs",
         "name": "CTETTALLIKAs",
-        "password": "$argon2id$v=19$m=65536,t=3,p=4$mtTCDtqHA8/4YoOozx6seA$Xa5e8Lk+cUZ4gePcTLocVc9XzcMlWIUOK31DfhArCVo"
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$mtTCDtqHA8/4YoOozx6seA$Xa5e8Lk+cUZ4gePcTLocVc9XzcMlWIUOK31DfhArCVo",
+        "role": "admin"
+    },
+    {
+        "username": "123",
+        "name": "123",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$FzI5/K622jVri0+RsGRZHg$iRVuiGNVsBToTzh3JvpipPMYK9gUYeUt09EE2bF0Kc4",
+        "role": "user"
     }
 ]
